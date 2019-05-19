@@ -14,10 +14,17 @@
 
 # [START app]
 import logging
+import requests
 
 # [START imports]
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 # [END imports]
+
+# Constants
+CLIENT_ID = "183048715948-mlej4766rra4liina1pct9ei1ll8cks0.apps.googleusercontent.com"
+STATE = "mNWCUc-h4Igc7ryHx2q6hJXj"
+PREFIX = "https://accounts.google.com/o/oauth2/v2/auth"
+REDIRECT_URI = "http://localhost:5000"
 
 # [START create_app]
 app = Flask(__name__)
@@ -29,12 +36,41 @@ def hello():
     # return "Hello Gato"
     return render_template('index.html')
 
+'''
+https://accounts.google.com/o/oauth2/v2/auth
+?response_type=code
+&client_id=107461084371-0vr1hjlgafvltftq307ceq0pcjrk2ad4.apps.googleusercontent.com
+&redirect_uri=https://osu-cs496-demo.appspot.com/oauth
+&scope=email
+&state=SuperSecret9000
+'''
+'''
+https://accounts.google.com/o/oauth2/v2/auth
+?response_type=code
+&client_id=107461084371-0vr1hjlgafvltftq307ceq0pcjrk2ad4.apps.googleusercontent.com
+&redirect_uri=https://osu-cs496-demo.appspot.com/oauth
+&scope=email
+&state=SuperSecret9000
+'''
+
+@app.route('/redirect_auth', methods=['GET'])
+def redirect_auth():
+    getAuthURL = PREFIX + "?" + "response_type=" + "code" + "&" + "client_id=" + CLIENT_ID + "&" + "redirect_uri=" + REDIRECT_URI + "&" + "scope=" + "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email" + "&" + "state=" + STATE
+    r = requests.get(getAuthURL)
+    print("r.url is: ", r.url)
+    print("\n")
+    print("r.content is: ", r.content)
+    return redirect(getAuthURL)
+    # return redirect("http://www.sfgate.com")
+
+
 # [START form]
 @app.route('/form')
 def form():
     # return flask.redirect(authorization_url) NEED THIS SOMEWHERE LATER
     return render_template('form.html')
 # [END form]
+
 
 
 # [START submitted]
