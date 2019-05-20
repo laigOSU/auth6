@@ -32,7 +32,8 @@ CLIENT_ID = "183048715948-mlej4766rra4liina1pct9ei1ll8cks0.apps.googleuserconten
 STATE = "mNWCUc-h4Igc7ryHx2q6hJXj"
 PREFIX = "https://accounts.google.com/o/oauth2/v2/auth"
 POST_PREFIX = "https://www.googleapis.com/oauth2/v4/token"
-REDIRECT_URI = "http://localhost:5000/submitted"
+# REDIRECT_URI = "http://localhost:5000/submitted"
+REDIRECT_URI = "https://laig493.appspot.com/submitted"
 DYNAMIC_PARAM = "555"
 
 # [START create_app]
@@ -140,9 +141,12 @@ def submitted_form():
 
     # jsonNameData = json.loads(str(jsonPeopleData['names']))
 
-    print("printing the name test: ", jsonPeopleData['names'][0]['displayName'])
+    print("printing the FIRST name test: ", jsonPeopleData['names'][0]['givenName'])
+    print("printing the LAST name test: ", jsonPeopleData['names'][0]['familyName'])
     print("type of printing the name test: ", type(jsonPeopleData))
 
+    firstName = jsonPeopleData['names'][0]['givenName']
+    lastName = jsonPeopleData['names'][0]['familyName']
     print("\n")
     # print("printing the name test: ", jsonPeopleData['names']['givenName'])
 
@@ -163,7 +167,9 @@ def submitted_form():
 
     # print("jsonNameData is: ", jsonNameData)
     # [START render_template]
-    return render_template('submitted_form.html')
+    return render_template('submitted_form.html',
+        firstName=firstName,
+        lastName=lastName)
     # return render_template(
     #     'submitted_form.html',
     #     name=name,
