@@ -16,6 +16,7 @@
 import logging
 import requests
 import os
+import json
 
 # [START imports]
 from flask import Flask, render_template, request, redirect
@@ -30,6 +31,7 @@ from flask import Flask, render_template, request, redirect
 CLIENT_ID = "183048715948-mlej4766rra4liina1pct9ei1ll8cks0.apps.googleusercontent.com"
 STATE = "mNWCUc-h4Igc7ryHx2q6hJXj"
 PREFIX = "https://accounts.google.com/o/oauth2/v2/auth"
+POST_PREFIX = "https://www.googleapis.com/oauth2/v4/token"
 REDIRECT_URI = "http://localhost:5000/submitted"
 DYNAMIC_PARAM = "555"
 
@@ -93,9 +95,30 @@ def form():
 # @app.route('/submitted', methods=['POST'])
 @app.route('/submitted', methods=['GET'])
 def submitted_form():
+    # Get the access code
     print("\nTRACE STATEMENTS")
     authcode = request.args.get('code')
     print("authcode", authcode)
+
+    # POST using the access code
+    payload = {'code': authcode, 'client_id': CLIENT_ID, 'client_secret': STATE, 'redirect_uri':REDIRECT_URI, 'grant_type': 'authorization_code'}
+    r = requests.post(POST_PREFIX, data=payload)
+    print("r.text: ", r.text)
+    print("\n")
+    print("type of r.text: ", type(r.text))
+    # print ("r.text.access_token is:", r.text.access_token)
+    # JSONify the access token and data
+    jsonData = json.loads(r.text)
+    print("\n")
+    print("type of jsonData is: ", type(jsonData))
+    print("\n")
+    print("jsonData is: ", jsonData)
+    print("\n")
+    print("access_token is: ", jsonData['access_token'])
+
+
+
+
     # [START render_template]
     return render_template('submitted_form.html')
     # return render_template(
