@@ -24,7 +24,8 @@ from flask import Flask, render_template, request, redirect
 CLIENT_ID = "183048715948-mlej4766rra4liina1pct9ei1ll8cks0.apps.googleusercontent.com"
 STATE = "mNWCUc-h4Igc7ryHx2q6hJXj"
 PREFIX = "https://accounts.google.com/o/oauth2/v2/auth"
-REDIRECT_URI = "http://localhost:5000"
+REDIRECT_URI = "http://localhost:5000/submitted"
+DYNAMIC_PARAM = "555"
 
 # [START create_app]
 app = Flask(__name__)
@@ -53,6 +54,7 @@ https://accounts.google.com/o/oauth2/v2/auth
 &state=SuperSecret9000
 '''
 
+
 @app.route('/redirect_auth', methods=['GET'])
 def redirect_auth():
     getAuthURL = PREFIX + "?" + "response_type=" + "code" + "&" + "client_id=" + CLIENT_ID + "&" + "redirect_uri=" + REDIRECT_URI + "&" + "scope=" + "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email" + "&" + "state=" + STATE
@@ -60,12 +62,18 @@ def redirect_auth():
     print("r.url is: ", r.url)
     print("\n")
     print("r.content is: ", r.content)
+    print("\n")
+    print("r.json is: ", r.json)
+    print("\n")
+    print("r.text is: ", r.text)
+
     return redirect(getAuthURL)
+
     # return redirect("http://www.sfgate.com")
 
 
 # [START form]
-@app.route('/form')
+@app.route('/form'+DYNAMIC_PARAM)
 def form():
     # return flask.redirect(authorization_url) NEED THIS SOMEWHERE LATER
     return render_template('form.html')
@@ -74,21 +82,23 @@ def form():
 
 
 # [START submitted]
-@app.route('/submitted', methods=['POST'])
+# @app.route('/submitted', methods=['POST'])
+@app.route('/submitted', methods=['GET'])
 def submitted_form():
-    name = request.form['name']
-    email = request.form['email']
-    site = request.form['site_url']
-    comments = request.form['comments']
+    # name = request.form['name']
+    # email = request.form['email']
+    # site = request.form['site_url']
+    # comments = request.form['comments']
 
     # [END submitted]
     # [START render_template]
-    return render_template(
-        'submitted_form.html',
-        name=name,
-        email=email,
-        site=site,
-        comments=comments)
+    return render_template('submitted_form.html')
+    # return render_template(
+    #     'submitted_form.html',
+    #     name=name,
+    #     email=email,
+    #     site=site,
+    #     comments=comments)
     # [END render_template]
 
 
