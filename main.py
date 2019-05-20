@@ -115,9 +115,17 @@ def submitted_form():
     print("jsonData is: ", jsonData)
     print("\n")
     print("access_token is: ", jsonData['access_token'])
+    print("\n")
+    print("tyep of access_token is: ", type(jsonData['access_token']))
 
-
-
+    token = jsonData['access_token']
+    print("\n")
+    # GET to people api using bearer token
+    peopleURL = "https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses"
+    headers = {'Authorization': "Bearer " + token}
+    peopleResponse = requests.get(peopleURL, headers=headers)
+    print("peopleResponse.text is:", peopleResponse.text)
+    print("type of peopleResponse.text is:", type(peopleResponse.text))
 
     # [START render_template]
     return render_template('submitted_form.html')
