@@ -15,9 +15,15 @@
 # [START app]
 import logging
 import requests
+import os
 
 # [START imports]
 from flask import Flask, render_template, request, redirect
+# from urlparse import urlparse
+# from uuid import uuid4
+# from urllib import urlencode
+# import urllib
+# import httplib
 # [END imports]
 
 # Constants
@@ -29,6 +35,7 @@ DYNAMIC_PARAM = "555"
 
 # [START create_app]
 app = Flask(__name__)
+# app = Flask(name)
 # [END create_app]
 
 
@@ -57,21 +64,22 @@ https://accounts.google.com/o/oauth2/v2/auth
 
 @app.route('/redirect_auth', methods=['GET'])
 def redirect_auth():
-    getAuthURL = PREFIX + "?" + "response_type=" + "code" + "&" + "client_id=" + CLIENT_ID + "&" + "redirect_uri=" + REDIRECT_URI + "&" + "scope=" + "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email" + "&" + "state=" + STATE
+    getAuthURL = PREFIX + "?" + "response_type=" + "code" + "&" + "client_id=" + CLIENT_ID + "&" + "redirect_uri=" + REDIRECT_URI + "&" + "scope=" + "profile email" + "&" + "state=" + STATE
     r = requests.get(getAuthURL)
-    print("r.url is: ", r.url)
-    print("\n")
-    print("r.content is: ", r.content)
-    print("\n")
-    print("r.json is: ", r.json)
-    print("\n")
-    print("r.text is: ", r.text)
+    # print("BEFORE r.url is: ", r.url)
+    # print("\n")
+    # print("BEFORE r.content is: ", r.content)
+    # print("\n")
+    # print("BEFORE r.json is: ", r.json)
+    # print("\n")
+    # print("BEFORE r.text is: ", r.text)
 
     return redirect(getAuthURL)
+    # return flask.redirect(getAuthURL)
 
-    # return redirect("http://www.sfgate.com")
 
 
+    return('',200)
 # [START form]
 @app.route('/form'+DYNAMIC_PARAM)
 def form():
@@ -85,12 +93,9 @@ def form():
 # @app.route('/submitted', methods=['POST'])
 @app.route('/submitted', methods=['GET'])
 def submitted_form():
-    # name = request.form['name']
-    # email = request.form['email']
-    # site = request.form['site_url']
-    # comments = request.form['comments']
-
-    # [END submitted]
+    print("\nTRACE STATEMENTS")
+    authcode = request.args.get('code')
+    print("authcode", authcode)
     # [START render_template]
     return render_template('submitted_form.html')
     # return render_template(
