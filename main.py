@@ -102,31 +102,66 @@ def submitted_form():
 
     # POST using the access code
     payload = {'code': authcode, 'client_id': CLIENT_ID, 'client_secret': STATE, 'redirect_uri':REDIRECT_URI, 'grant_type': 'authorization_code'}
-    r = requests.post(POST_PREFIX, data=payload)
-    print("r.text: ", r.text)
-    print("\n")
-    print("type of r.text: ", type(r.text))
+    urlencodeheader = {'Content-Type': 'application/x-www-form-urlencoded'}
+    r = requests.post(POST_PREFIX, data=payload, headers=urlencodeheader)
+
+
+    # print("r.text: ", r.text)
+    # print("\n")
+    # print("type of r.text: ", type(r.text))
+
     # print ("r.text.access_token is:", r.text.access_token)
     # JSONify the access token and data
     jsonData = json.loads(r.text)
-    print("\n")
-    print("type of jsonData is: ", type(jsonData))
-    print("\n")
-    print("jsonData is: ", jsonData)
-    print("\n")
-    print("access_token is: ", jsonData['access_token'])
-    print("\n")
-    print("tyep of access_token is: ", type(jsonData['access_token']))
 
+
+    # print("\n")
+    # print("type of jsonData is: ", type(jsonData))
+    # print("\n")
+    # print("jsonData is: ", jsonData)
+    # print("\n")
+    # print("access_token is: ", jsonData['access_token'])
+    # print("\n")
+    # print("tyep of access_token is: ", type(jsonData['access_token']))
+    #
     token = jsonData['access_token']
     print("\n")
     # GET to people api using bearer token
     peopleURL = "https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses"
     headers = {'Authorization': "Bearer " + token}
     peopleResponse = requests.get(peopleURL, headers=headers)
-    print("peopleResponse.text is:", peopleResponse.text)
-    print("type of peopleResponse.text is:", type(peopleResponse.text))
 
+
+    # print("peopleResponse.text is:", peopleResponse.text)
+    # print("type of peopleResponse.text is:", type(peopleResponse.text))
+
+    # jsonPeopleData = json.loads(peopleResponse.text)
+    jsonPeopleData = peopleResponse.json()
+
+    # jsonNameData = json.loads(str(jsonPeopleData['names']))
+
+    print("printing the name test: ", jsonPeopleData['names'][0]['displayName'])
+    print("type of printing the name test: ", type(jsonPeopleData))
+
+    print("\n")
+    # print("printing the name test: ", jsonPeopleData['names']['givenName'])
+
+    # this is a list
+    # foundItems = (key for key, vals in jsonPeopleData['names'].items() if item in vals)
+    # print("foundItems: ", foundItems)
+
+    print("\n")
+    # #
+    # jsonNameData = jsonPeopleData['names']
+    # # newList = jsonNameData[:2]
+    # print("iterate list:")
+    # for i in jsonNameData :
+    #     print(i, "\n")
+    # print("length of jsonNameData: ", len(jsonNameData))
+    # print("newList:", newList)
+    # print("type of newList:", type(newList))
+
+    # print("jsonNameData is: ", jsonNameData)
     # [START render_template]
     return render_template('submitted_form.html')
     # return render_template(
