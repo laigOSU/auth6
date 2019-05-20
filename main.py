@@ -4,7 +4,7 @@
 # [START app]
 import logging
 import requests
-# import os
+import os
 import json
 
 # [START imports]
@@ -55,9 +55,10 @@ https://accounts.google.com/o/oauth2/v2/auth
 
 
 @app.route('/redirect_auth', methods=['GET'])
+# @app.route('/redirect_auth')
 def redirect_auth():
-    getAuthURL = PREFIX + "?" + "response_type=" + "code" + "&" + "client_id=" + CLIENT_ID + "&" + "redirect_uri=" + REDIRECT_URI + "&" + "scope=" + "profile email" + "&" + "state=" + STATE
-    r = requests.get(getAuthURL)
+    getAuthURL = PREFIX + "?" + "response_type=" + "code" + "&" + "client_id=" + CLIENT_ID + "&" + "redirect_uri=" + REDIRECT_URI + "&" + "scope=" + "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email" + "&" + "state=" + STATE
+    # r = requests.get(getAuthURL)
     # print("BEFORE r.url is: ", r.url)
     # print("\n")
     # print("BEFORE r.content is: ", r.content)
@@ -83,8 +84,9 @@ def form():
 
 # [START submitted]
 # @app.route('/submitted', methods=['POST'])
-@app.route('/submitted', methods=['GET'])
-def submitted_form():
+@app.route('/submitted')
+# @app.route('/submitted', methods=['GET'])
+def submitted():
     # Get the access code
     print("\nTRACE STATEMENTS")
     authcode = request.args.get('code')
